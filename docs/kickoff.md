@@ -42,6 +42,6 @@ Done when no open tickets remain and "Not yet specified" is empty, every patch e
 
 ## After the map: build
 
-1. Run the to-spec skill to write the v1 build spec from the map's Decisions so far. This spec is the map's destination. It orders delivery as Phase 1 (one Station, no Host) and then Phase 2, with Phase 2 starting only after Phase 1 passes the gate defined in "Validation protocol and pass criteria".
+1. Run the to-spec skill to write the v1 build spec from the map's Decisions so far. This spec is the map's destination. It orders delivery as Phase 1 (one Station, no Host) and then Phase 2, with Phase 2 starting only after Phase 1 passes the gate defined in "Phase 1 functional gate". That gate needs no Criterion. Validation against GymAware follows "Validation protocol and pass criteria" and does not gate the build.
 2. Run the to-tickets skill to split the spec into tracer-bullet tickets with blocking edges.
 3. Add an `## Agent skills` note to `CLAUDE.md`: implement tickets with the tdd or implement skill, and use the codebase-design skill when drawing module boundaries, starting with the rep-logic package. Then delete `docs/kickoff.md`; the spec, tickets, and `CLAUDE.md` carry the build from here.
