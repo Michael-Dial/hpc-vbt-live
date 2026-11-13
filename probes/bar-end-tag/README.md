@@ -15,8 +15,8 @@ Throwaway probe for the map ticket "Bar-end tag mount": print sheets for the tag
 Print
 
 1. Print all three pages on matte paper at 100% scale. Inkjet: let the ink dry before handling.
-2. Measure the scale line on each page. It must be 100 mm. If it is off by more than 0.5 mm, fix the print settings and reprint.
-3. With calipers, measure the detection edge of each tag in both directions and write the values down. 36h11: the outer edge of the black square (nominal 72 mm; fallback 28 mm). 41h12: the inner edge of the black ring (nominal 50 mm).
+2. Check the scale on each page: lay a credit or debit card on the printed box (every card is 85.60 x 53.98 mm). Its edges should land on the lines. If they do not, fix the print settings and reprint. A ruler on the 100 mm line works too.
+3. Optional, for validation work only: with calipers, measure the detection edge of each tag in both directions and write the values down. 36h11: the outer edge of the black square (nominal 72 mm; fallback 28 mm). 41h12: the inner edge of the black ring (nominal 50 mm).
 
 Carrier
 

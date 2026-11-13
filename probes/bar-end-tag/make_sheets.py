@@ -117,8 +117,16 @@ class Page:
         self.line(x_mm, y_mm, x_mm + length, y_mm, 0.6, 0.0)
         for i in range(0, length + 1, 10):
             self.line(x_mm + i, y_mm - (3 if i % 50 == 0 else 1.5), x_mm + i, y_mm, 0.6, 0.0)
-        self.text(x_mm, y_mm + 4.5, f"Scale check: this line must measure exactly {length} mm. "
-                                    "If not, reprint at 100% with fit-to-page off.", 8)
+        self.text(x_mm, y_mm + 4.5, f"Scale check: this line is {length} mm, and the box below is the size "
+                                    "of a credit card (85.60 x 53.98 mm).", 8)
+        self.text(x_mm, y_mm + 8.5, "Lay a card on the box. If its edges do not land on the lines, "
+                                    "reprint at 100% with fit-to-page off.", 8)
+        # ISO/IEC 7810 ID-1: every credit, debit and ID card is this size.
+        w, h, top = 85.60, 53.98, y_mm + 12
+        left = x_mm + (length - w) / 2
+        for x1, y1, x2, y2 in [(left, top, left + w, top), (left + w, top, left + w, top + h),
+                               (left + w, top + h, left, top + h), (left, top + h, left, top)]:
+            self.line(x1, y1, x2, y2, 0.5, 0.0)
 
 
 def big_tag_page(cells, family, tag_id, edge_cells, edge_where):

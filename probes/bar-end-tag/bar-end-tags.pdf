@@ -9,7 +9,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 4 0 obj
-<< /Length 2536 >>
+<< /Length 2884 >>
 stream
 0 g BT /F1 12 Tf 56.693 740.976 Td (tag36h11  ID 0  -  90 mm printed, on a 100 mm carrier) Tj ET
 0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 72 mm, the outer edge of the black square. Measure yours with calipers.) Tj ET
@@ -54,7 +54,12 @@ stream
 0.00 G 0.6 w 391.039 271.843 m 391.039 267.591 l S
 0.00 G 0.6 w 419.386 271.843 m 419.386 267.591 l S
 0.00 G 0.6 w 447.732 276.094 m 447.732 267.591 l S
-0 g BT /F1 8 Tf 164.268 254.835 Td (Scale check: this line must measure exactly 100 mm. If not, reprint at 100% with fit-to-page off.) Tj ET
+0 g BT /F1 8 Tf 164.268 254.835 Td (Scale check: this line is 100 mm, and the box below is the size of a credit card \(85.60 x 53.98 mm\).) Tj ET
+0 g BT /F1 8 Tf 164.268 243.496 Td (Lay a card on the box. If its edges do not land on the lines, reprint at 100% with fit-to-page off.) Tj ET
+0.00 G 0.5 w 184.677 233.575 m 427.323 233.575 l S
+0.00 G 0.5 w 427.323 233.575 m 427.323 80.561 l S
+0.00 G 0.5 w 427.323 80.561 m 184.677 80.561 l S
+0.00 G 0.5 w 184.677 80.561 m 184.677 233.575 l S
 0 g BT /F1 7 Tf 56.693 49.323 Td (hpc-vbt-live, probes/bar-end-tag. Tag pattern from AprilRobotics/apriltag-imgs \(BSD-2-Clause\).) Tj ET
 endstream
 endobj
@@ -62,7 +67,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 6 0 obj
-<< /Length 2581 >>
+<< /Length 2929 >>
 stream
 0 g BT /F1 12 Tf 56.693 740.976 Td (tagStandard41h12  ID 0  -  90 mm printed, on a 100 mm carrier) Tj ET
 0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 50 mm, the inner edge of the black ring. Measure yours with calipers.) Tj ET
@@ -108,7 +113,12 @@ stream
 0.00 G 0.6 w 391.039 271.843 m 391.039 267.591 l S
 0.00 G 0.6 w 419.386 271.843 m 419.386 267.591 l S
 0.00 G 0.6 w 447.732 276.094 m 447.732 267.591 l S
-0 g BT /F1 8 Tf 164.268 254.835 Td (Scale check: this line must measure exactly 100 mm. If not, reprint at 100% with fit-to-page off.) Tj ET
+0 g BT /F1 8 Tf 164.268 254.835 Td (Scale check: this line is 100 mm, and the box below is the size of a credit card \(85.60 x 53.98 mm\).) Tj ET
+0 g BT /F1 8 Tf 164.268 243.496 Td (Lay a card on the box. If its edges do not land on the lines, reprint at 100% with fit-to-page off.) Tj ET
+0.00 G 0.5 w 184.677 233.575 m 427.323 233.575 l S
+0.00 G 0.5 w 427.323 233.575 m 427.323 80.561 l S
+0.00 G 0.5 w 427.323 80.561 m 184.677 80.561 l S
+0.00 G 0.5 w 184.677 80.561 m 184.677 233.575 l S
 0 g BT /F1 7 Tf 56.693 49.323 Td (hpc-vbt-live, probes/bar-end-tag. Tag pattern from AprilRobotics/apriltag-imgs \(BSD-2-Clause\).) Tj ET
 endstream
 endobj
@@ -116,7 +126,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 8 0 obj
-<< /Length 3200 >>
+<< /Length 3552 >>
 stream
 0 g BT /F1 12 Tf 56.693 740.976 Td (Fallback: tag36h11 ID 0 at 35 mm printed \(28 mm detection edge\)) Tj ET
 0 g BT /F1 9 Tf 56.693 721.134 Td (Stays inside a 50 mm sleeve end. Cut on the grey circle; two copies.) Tj ET
@@ -174,7 +184,12 @@ stream
 0.00 G 0.6 w 391.039 441.921 m 391.039 437.669 l S
 0.00 G 0.6 w 419.386 441.921 m 419.386 437.669 l S
 0.00 G 0.6 w 447.732 446.173 m 447.732 437.669 l S
-0 g BT /F1 8 Tf 164.268 424.913 Td (Scale check: this line must measure exactly 100 mm. If not, reprint at 100% with fit-to-page off.) Tj ET
+0 g BT /F1 8 Tf 164.268 424.913 Td (Scale check: this line is 100 mm, and the box below is the size of a credit card \(85.60 x 53.98 mm\).) Tj ET
+0 g BT /F1 8 Tf 164.268 413.575 Td (Lay a card on the box. If its edges do not land on the lines, reprint at 100% with fit-to-page off.) Tj ET
+0.00 G 0.5 w 184.677 403.654 m 427.323 403.654 l S
+0.00 G 0.5 w 427.323 403.654 m 427.323 250.639 l S
+0.00 G 0.5 w 427.323 250.639 m 184.677 250.639 l S
+0.00 G 0.5 w 184.677 250.639 m 184.677 403.654 l S
 0 g BT /F1 7 Tf 56.693 49.323 Td (hpc-vbt-live, probes/bar-end-tag. Tag pattern from AprilRobotics/apriltag-imgs \(BSD-2-Clause\).) Tj ET
 endstream
 endobj
@@ -188,13 +203,13 @@ xref
 0000000058 00000 n 
 0000000127 00000 n 
 0000000197 00000 n 
-0000002785 00000 n 
-0000002911 00000 n 
-0000005544 00000 n 
-0000005670 00000 n 
-0000008922 00000 n 
+0000003133 00000 n 
+0000003259 00000 n 
+0000006240 00000 n 
+0000006366 00000 n 
+0000009970 00000 n 
 trailer
 << /Size 10 /Root 1 0 R >>
 startxref
-9048
+10096
 %%EOF
