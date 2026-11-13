@@ -1,0 +1,34 @@
+# Throwaway probe for the map ticket "XR benchmark" (issue 5). Not product code.
+name: XRBench
+options:
+  deploymentTarget:
+    iOS: "18.0"
+packages:
+  TagKit:
+    path: TagKit
+targets:
+  XRBench:
+    type: application
+    platform: iOS
+    sources: [App]
+    dependencies:
+      - package: TagKit
+        product: AprilTag
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: edu.osu.hpc.vbt.xrbench
+        PRODUCT_NAME: XRBench
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: XR Bench
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: Records the bar and tracks the tag on its end.
+        INFOPLIST_KEY_UIFileSharingEnabled: YES
+        INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        MARKETING_VERSION: 0.0.1
+        CURRENT_PROJECT_VERSION: 1
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.0"
+        SWIFT_STRICT_CONCURRENCY: minimal
