@@ -1,0 +1,1 @@
+Vendored from https://github.com/AprilRobotics/apriltag at commit b7c0ebe9aa20f82ec7a828579004f9e706bfecd9 (BSD-2-Clause, see LICENSE.md). Unmodified. Only the core library, common/, tag36h11 and tagStandard41h12 are included.
