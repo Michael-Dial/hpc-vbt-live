@@ -9,10 +9,10 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 4 0 obj
-<< /Length 2884 >>
+<< /Length 2896 >>
 stream
 0 g BT /F1 12 Tf 56.693 740.976 Td (tag36h11  ID 0  -  90 mm printed, on a 100 mm carrier) Tj ET
-0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 72 mm, the outer edge of the black square. Measure yours with calipers.) Tj ET
+0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 72 mm, the outer edge of the black square. Check the scale with the card box below.) Tj ET
 0 g BT /F1 9 Tf 56.693 704.126 Td (Cut on the grey square. The black ticks mark the carrier's centre lines; keep the white margin clean.) Tj ET
 0.50 G 0.4 w 164.268 621.921 m 447.732 621.921 l S
 0.50 G 0.4 w 447.732 621.921 m 447.732 338.457 l S
@@ -67,10 +67,10 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 6 0 obj
-<< /Length 2929 >>
+<< /Length 2941 >>
 stream
 0 g BT /F1 12 Tf 56.693 740.976 Td (tagStandard41h12  ID 0  -  90 mm printed, on a 100 mm carrier) Tj ET
-0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 50 mm, the inner edge of the black ring. Measure yours with calipers.) Tj ET
+0 g BT /F1 9 Tf 56.693 721.134 Td (Nominal detection edge \(tagsize\): 50 mm, the inner edge of the black ring. Check the scale with the card box below.) Tj ET
 0 g BT /F1 9 Tf 56.693 704.126 Td (Cut on the grey square. The black ticks mark the carrier's centre lines; keep the white margin clean.) Tj ET
 0.50 G 0.4 w 164.268 621.921 m 447.732 621.921 l S
 0.50 G 0.4 w 447.732 621.921 m 447.732 338.457 l S
@@ -203,13 +203,13 @@ xref
 0000000058 00000 n 
 0000000127 00000 n 
 0000000197 00000 n 
-0000003133 00000 n 
-0000003259 00000 n 
-0000006240 00000 n 
-0000006366 00000 n 
-0000009970 00000 n 
+0000003145 00000 n 
+0000003271 00000 n 
+0000006264 00000 n 
+0000006390 00000 n 
+0000009994 00000 n 
 trailer
 << /Size 10 /Root 1 0 R >>
 startxref
-10096
+10120
 %%EOF

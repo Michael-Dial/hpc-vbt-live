@@ -136,7 +136,7 @@ def big_tag_page(cells, family, tag_id, edge_cells, edge_where):
     page.text(20, 18, f"{family}  ID {tag_id}  -  {printed:.0f} mm printed, on a {side:.0f} mm carrier", 12)
     edge = printed * edge_cells / len(cells)
     page.text(20, 25, f"Nominal detection edge (tagsize): {edge:.0f} mm, {edge_where}. "
-                      "Measure yours with calipers.", 9)
+                      "Check the scale with the card box below.", 9)
     page.text(20, 31, "Cut on the grey square. The black ticks mark the carrier's centre lines; "
                       "keep the white margin clean.", 9)
     page.carrier(cx, cy, side)
