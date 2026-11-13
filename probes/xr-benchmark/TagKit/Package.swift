@@ -4,7 +4,10 @@ import PackageDescription
 let package = Package(
     name: "TagKit",
     platforms: [.iOS("18.0"), .macOS(.v14)],
-    products: [.library(name: "AprilTag", targets: ["AprilTag"])],
+    products: [
+        .library(name: "AprilTag", targets: ["AprilTag"]),
+        .library(name: "RoughReps", targets: ["RoughReps"]),
+    ],
     targets: [
         .target(
             name: "CAprilTag",
@@ -15,5 +18,7 @@ let package = Package(
         ),
         .target(name: "AprilTag", dependencies: ["CAprilTag"]),
         .testTarget(name: "AprilTagTests", dependencies: ["AprilTag"]),
+        .target(name: "RoughReps"),
+        .testTarget(name: "RoughRepsTests", dependencies: ["RoughReps"]),
     ]
 )

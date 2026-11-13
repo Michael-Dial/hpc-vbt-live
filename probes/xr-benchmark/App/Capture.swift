@@ -5,7 +5,7 @@ import UIKit
 struct BenchConfig {
     var family: TagFamily = .tag36h11
     var fps = 120
-    var detectEvery = 1   // 1 = every frame, 2 = every second frame
+    var detectEvery = 2   // 2 = every second frame (60 Hz), the XR benchmark's recommendation
     var record = true
 
     /// Detection edge in metres for the 90 mm printed tags.
@@ -28,6 +28,8 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
     let session = AVCaptureSession()
     let stats = BenchStats()
     private(set) var runDirectory: URL?
+    /// Called on the detection queue for every detection attempt: capture time, and tag position if found.
+    var onSample: ((Double, (x: Double, y: Double, z: Double)?) -> Void)?
 
     private let captureQueue = DispatchQueue(label: "bench.capture", qos: .userInteractive)
     private let detectQueue = DispatchQueue(label: "bench.detect", qos: .userInitiated)
@@ -302,6 +304,7 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
             row += "0,,,,,,,"
         }
         stats.detection(ms: ms, windowed: searched != nil, found: best != nil, description: description)
+        onSample?(pts, best?.translation)
         detectionsBuffer.append(Data((row + "\n").utf8))
         if detectionsBuffer.count > 32_768 {
             detectionsLog?.write(detectionsBuffer); detectionsBuffer.removeAll(keepingCapacity: true)
