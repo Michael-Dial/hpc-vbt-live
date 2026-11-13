@@ -281,9 +281,10 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
                 let dx: Double = c[i].x - next.x, dy: Double = c[i].y - next.y
                 edge = max(edge, (dx * dx + dy * dy).squareRoot())
             }
-            // Shrink the window's pixels as the tag gets bigger: keep the detection edge at 56 px or more
-            // after decimation (7 px per cell for tag36h11), using only the values the library handles.
-            windowDecimate = [4, 3, 2, 1.5].first { edge / Double($0) >= 56 } ?? 1
+            // Shrink the window's pixels as the tag gets bigger: keep the detection edge at 45 px or more
+            // after decimation (5.6 px per cell for tag36h11), using only the values the library handles.
+            // The 51-minute run showed full resolution on a 72 px tag costs 7 ms cool and 18 ms once throttled.
+            windowDecimate = [4, 3, 2, 1.5].first { edge / Double($0) >= 45 } ?? 1
             // About three detection edges wide, a multiple of 12 so every decimation divides it.
             let side = max(120, (Int(edge * 3) + 11) / 12 * 12)
             let w = min(side, width / 12 * 12), h = min(side, height / 12 * 12)
