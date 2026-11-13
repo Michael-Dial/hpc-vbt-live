@@ -38,6 +38,7 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
     private var frameIndex = 0
     private var writer: AVAssetWriter?
     private var writerInput: AVAssetWriterInput?
+    private var writerStarted = false
     private var framesLog: FileHandle?
     private var framesBuffer = Data()
     private var fallbackIntrinsics: Intrinsics?
@@ -51,6 +52,7 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
     // Detection queue only.
     private var detector: TagDetector?
     private var window: SearchWindow?
+    private var windowDecimate: Float = 1
     private var misses = 0
     private var detectionsLog: FileHandle?
     private var detectionsBuffer = Data()
@@ -137,7 +139,7 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
         }
         let frames = log("frames.csv", header: "frame,pts_s,encoded")
         let detections = log("detections.csv",
-                             header: "frame,pts_s,ms,windowed,found,id,margin,cx_px,cy_px,tx_m,ty_m,tz_m")
+                             header: "frame,pts_s,ms,window_px_at_decimate,found,id,margin,cx_px,cy_px,tx_m,ty_m,tz_m")
 
         stats.reset(
             nominalInterval: 1 / fps, formatLine: describe(format), formats: all1080.map(describe),
@@ -146,6 +148,7 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
                        "intrinsics_from_camera": intrinsicsDelivered,
                        "max_exposure_s": 1.0 / 250, "exposure": "continuous auto", "focus": "single scan then held"])
         captureQueue.sync { frameIndex = 0; writer = nil; writerInput = nil; framesLog = frames; framesBuffer = Data() }
+        if config.record { prepareWriter() }
         detectQueue.sync {
             detector = TagDetector(family: config.family)
             window = nil; misses = 0; detectionsLog = detections; detectionsBuffer = Data()
@@ -194,8 +197,8 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
 
         var encoded = 0
         if config.record {
-            if writer == nil { startWriter(first: sampleBuffer, at: time) }
-            if let input = writerInput, writer?.status == .writing {
+            if let writer, !writerStarted { writer.startSession(atSourceTime: time); writerStarted = true }
+            if let input = writerInput, writerStarted, writer?.status == .writing {
                 if input.isReadyForMoreMediaData, input.append(sampleBuffer) { encoded = 1 } else { stats.writerDrop() }
             }
         }
@@ -237,18 +240,16 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
         stats.captureDrop()
     }
 
-    private func startWriter(first: CMSampleBuffer, at time: CMTime) {
+    private func prepareWriter() {
         guard let url = movieURL, let made = try? AVAssetWriter(outputURL: url, fileType: .mov) else { return }
         let settings = output.recommendedVideoSettings(forVideoCodecType: .hevc, assetWriterOutputFileType: .mov)
-        let input = AVAssetWriterInput(mediaType: .video, outputSettings: settings,
-                                       sourceFormatHint: CMSampleBufferGetFormatDescription(first))
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
         input.expectsMediaDataInRealTime = true
         made.movieFragmentInterval = CMTime(seconds: 10, preferredTimescale: 600)  // playable after a crash
         guard made.canAdd(input) else { return }
         made.add(input)
         made.startWriting()
-        made.startSession(atSourceTime: time)
-        writer = made; writerInput = input
+        captureQueue.sync { writer = made; writerInput = input; writerStarted = false }
     }
 
     // MARK: Detection queue
@@ -260,12 +261,13 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
         // Full frame: decimate 2 on two threads. Tracking window: full resolution on one thread.
         let found = detector.detect(
             luma: luma, width: width, height: height, stride: stride, window: searched,
-            decimate: searched == nil ? 2 : 1, threads: searched == nil ? 2 : 1,
+            decimate: searched == nil ? 2 : windowDecimate, threads: searched == nil ? 2 : 1,
             intrinsics: intrinsics, tagSize: config.tagSize)
         let ms = Float(DispatchTime.now().uptimeNanoseconds - begin) / 1e6
         let best = found.max { $0.decisionMargin < $1.decisionMargin }
 
-        var row = "\(frame),\(String(format: "%.6f", pts)),\(String(format: "%.3f", ms)),\(searched == nil ? 0 : 1),"
+        let mode = searched == nil ? "0" : "\(searched!.width)@\(windowDecimate)"
+        var row = "\(frame),\(String(format: "%.6f", pts)),\(String(format: "%.3f", ms)),\(mode),"
         var description = "no tag"
         if let tag = best {
             misses = 0
@@ -276,9 +278,12 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
                 let dx: Double = c[i].x - next.x, dy: Double = c[i].y - next.y
                 edge = max(edge, (dx * dx + dy * dy).squareRoot())
             }
-            // About three printed tag widths, a multiple of 4 because thresholding works in 4x4 tiles.
-            let side = min(640, max(128, (Int(edge * 4) + 3) / 4 * 4))
-            let w = min(side, width), h = min(side, height)
+            // Shrink the window's pixels as the tag gets bigger: keep the detection edge at 56 px or more
+            // after decimation (7 px per cell for tag36h11), using only the values the library handles.
+            windowDecimate = [4, 3, 2, 1.5].first { edge / Double($0) >= 56 } ?? 1
+            // About three detection edges wide, a multiple of 12 so every decimation divides it.
+            let side = max(120, (Int(edge * 3) + 11) / 12 * 12)
+            let w = min(side, width / 12 * 12), h = min(side, height / 12 * 12)
             window = SearchWindow(x: min(max(0, Int(tag.center.x) - w / 2), width - w),
                                   y: min(max(0, Int(tag.center.y) - h / 2), height - h), width: w, height: h)
             let t = tag.translation
