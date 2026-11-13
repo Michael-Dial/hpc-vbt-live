@@ -30,6 +30,7 @@ final class BenchStats {
     private var thermal: [(seconds: Double, state: String)] = []
     private var battery: [(seconds: Double, level: Float)] = []
     private var last = "no tag yet"
+    private var lastFx = Double.nan, lastEdge = Double.nan
     private var lastFound = false
     private(set) var formatLine = ""
     private(set) var formats: [String] = []
@@ -64,6 +65,7 @@ final class BenchStats {
         lastPTS = pts
     }
 
+    func note(fx: Double, edgePixels: Double) { lock.lock(); lastFx = fx; lastEdge = edgePixels; lock.unlock() }
     func captureDrop() { lock.lock(); captureDrops += 1; lock.unlock() }
     func writerDrop() { lock.lock(); writerDrops += 1; lock.unlock() }
     func detectSkip() { lock.lock(); detectSkipped += 1; lock.unlock() }
@@ -154,6 +156,8 @@ final class BenchStats {
             "elapsed_s": (elapsed * 10).rounded() / 10,
             "settings": settings,
             "active_format": formatLine,
+            "last_fx_px": lastFx.isNaN ? NSNull() : lastFx as Any,
+            "last_tag_edge_px": lastEdge.isNaN ? NSNull() : lastEdge as Any,
             "formats_1080p": formats,
             "frames": frames,
             "mean_fps": elapsed > 0 ? (Double(frames) / elapsed * 100).rounded() / 100 : 0,

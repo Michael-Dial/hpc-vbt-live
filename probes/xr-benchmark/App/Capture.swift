@@ -45,9 +45,9 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
 
     // Shared between the queues, guarded by busyLock.
     private let busyLock = NSLock()
-    private var detectBusy = false
-    private var luma: UnsafeMutablePointer<UInt8>?
-    private var lumaCapacity = 0
+    private var pool: [UnsafeMutablePointer<UInt8>?] = [nil, nil, nil]  // luma copies waiting for the detector
+    private var poolBusy = [false, false, false]
+    private var poolCapacity = [0, 0, 0]
 
     // Detection queue only.
     private var detector: TagDetector?
@@ -207,20 +207,22 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
 
         guard index % config.detectEvery == 0, let pixels = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         busyLock.lock()
-        if detectBusy { busyLock.unlock(); stats.detectSkip(); return }
-        detectBusy = true
+        // Up to three frames may wait for the detector; beyond that the frame is skipped and counted.
+        guard let slot = poolBusy.firstIndex(of: false) else { busyLock.unlock(); stats.detectSkip(); return }
+        poolBusy[slot] = true
         busyLock.unlock()
 
         // Copy the luma plane so the capture buffer is released at once.
         CVPixelBufferLockBaseAddress(pixels, .readOnly)
         let width = CVPixelBufferGetWidthOfPlane(pixels, 0), height = CVPixelBufferGetHeightOfPlane(pixels, 0)
         let stride = CVPixelBufferGetBytesPerRowOfPlane(pixels, 0)
-        if lumaCapacity < stride * height {
-            luma?.deallocate()
-            lumaCapacity = stride * height
-            luma = .allocate(capacity: lumaCapacity)
+        if poolCapacity[slot] < stride * height {
+            pool[slot]?.deallocate()
+            poolCapacity[slot] = stride * height
+            pool[slot] = .allocate(capacity: stride * height)
         }
-        if let base = CVPixelBufferGetBaseAddressOfPlane(pixels, 0), let luma { memcpy(luma, base, stride * height) }
+        let luma = pool[slot]!
+        if let base = CVPixelBufferGetBaseAddressOfPlane(pixels, 0) { memcpy(luma, base, stride * height) }
         CVPixelBufferUnlockBaseAddress(pixels, .readOnly)
 
         var intrinsics = fallbackIntrinsics
@@ -231,8 +233,8 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
                                     cx: Double(m.columns.2.x), cy: Double(m.columns.2.y))
         }
         detectQueue.async { [self] in
-            detect(frame: index, pts: pts, width: width, height: height, stride: stride, intrinsics: intrinsics)
-            busyLock.lock(); detectBusy = false; busyLock.unlock()
+            detect(luma: luma, frame: index, pts: pts, width: width, height: height, stride: stride, intrinsics: intrinsics)
+            busyLock.lock(); poolBusy[slot] = false; busyLock.unlock()
         }
     }
 
@@ -254,8 +256,9 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
 
     // MARK: Detection queue
 
-    private func detect(frame: Int, pts: Double, width: Int, height: Int, stride: Int, intrinsics: Intrinsics?) {
-        guard let detector, let luma else { return }
+    private func detect(luma: UnsafeMutablePointer<UInt8>, frame: Int, pts: Double, width: Int, height: Int,
+                        stride: Int, intrinsics: Intrinsics?) {
+        guard let detector else { return }
         let searched = window
         let begin = DispatchTime.now().uptimeNanoseconds
         // Full frame: decimate 2 on two threads. Tracking window: full resolution on one thread.
@@ -289,7 +292,9 @@ final class CaptureController: NSObject, AVCaptureVideoDataOutputSampleBufferDel
             let t = tag.translation
             row += String(format: "1,%d,%.1f,%.2f,%.2f,%.4f,%.4f,%.4f", tag.id, tag.decisionMargin,
                           tag.center.x, tag.center.y, t?.x ?? .nan, t?.y ?? .nan, t?.z ?? .nan)
-            description = String(format: "TAG id %d   %.2f m away   edge %.0f px", tag.id, t?.z ?? .nan, edge)
+            description = String(format: "TAG id %d  %.2f m away  edge %.0f px  fx %.0f", tag.id, t?.z ?? .nan, edge,
+                                 intrinsics?.fx ?? .nan)
+            stats.note(fx: intrinsics?.fx ?? .nan, edgePixels: edge)
         } else {
             misses += 1
             if misses >= 6 { window = nil }  // lost: go back to searching the whole frame
